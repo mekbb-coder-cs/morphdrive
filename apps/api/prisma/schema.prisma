@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(uuid())
+  email        String            @unique
+  username     String            @unique
+  passwordHash String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  loadouts     VehicleLoadout[]
+  lapTimes     LapTime[]
+
+  @@map("users")
+}
+
+model VehicleBase {
+  id                   String           @id // e.g. "spectre-rs", "apex-nomad"
+  name                 String
+  description          String
+  glbAssetUrl          String
+  defaultMorphSettings Json
+  defaultColors        Json
+  baseTuning           Json
+  createdAt            DateTime         @default(now())
+  loadouts             VehicleLoadout[]
+
+  @@map("vehicle_bases")
+}
+
+model VehicleLoadout {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleBaseId String
+  vehicleBase   VehicleBase @relation(fields: [vehicleBaseId], references: [id], onDelete: Cascade)
+  name          String
+  activeMode    String      @default("STREET") // "STREET" | "OFFROAD" | "FLIGHT"
+  morphSettings Json
+  materialColors Json
+  tuningStats   Json?
+  isFavorite    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  lapTimes      LapTime[]
+
+  @@map("vehicle_loadouts")
+}
+
+model Track {
+  id              String    @id // e.g. "neon-canyon", "cyber-grid"
+  name            String
+  description     String
+  glbTrackUrl     String
+  lengthMeters    Float
+  checkpointCount Int       @default(4)
+  createdAt       DateTime  @default(now())
+  lapTimes        LapTime[]
+
+  @@map("tracks")
+}
+
+model LapTime {
+  id               String          @id @default(uuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackId          String
+  track            Track           @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  vehicleLoadoutId String?
+  vehicleLoadout   VehicleLoadout? @relation(fields: [vehicleLoadoutId], references: [id], onDelete: SetNull)
+  timeMs           Int
+  ghostDataUrl     String?
+  achievedAt       DateTime        @default(now())
+
+  @@index([trackId, timeMs])
+  @@map("lap_times")
+}

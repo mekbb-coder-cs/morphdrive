@@ -1,0 +1,30 @@
+{
+  "name": "morphdrive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MorphDrive - 3D Vehicle Morphing & Driving Experience",
+  "scripts": {
+    "dev": "pnpm --filter ./packages/* --filter ./apps/* --parallel run dev",
+    "dev:web": "pnpm --filter @morphdrive/web run dev",
+    "dev:api": "pnpm --filter @morphdrive/api run dev",
+    "build": "pnpm --filter @morphdrive/shared run build && pnpm --filter ./apps/* run build",
+    "test": "pnpm --filter ./packages/* --filter ./apps/* run test",
+    "lint": "pnpm --filter ./packages/* --filter ./apps/* run lint",
+    "db:generate": "pnpm --filter @morphdrive/api run prisma:generate",
+    "db:migrate": "pnpm --filter @morphdrive/api run prisma:migrate",
+    "db:seed": "pnpm --filter @morphdrive/api run prisma:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "prettier": "^3.5.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@node-rs/argon2",
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "prisma"
+    ]
+  }
+}
