@@ -7,21 +7,196 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User & Role Access Control
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
 model User {
   id           String            @id @default(uuid())
   email        String            @unique
   username     String            @unique
   passwordHash String
+  role         Role              @default(STUDENT)
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
+
+  // Educational Activity Relations
+  attempts     Attempt[]
+  quizAttempts QuizAttempt[]
+  progress     Progress[]
+
+  // Sandbox & Driving Loadout Relations
   loadouts     VehicleLoadout[]
   lapTimes     LapTime[]
 
   @@map("users")
 }
 
+// Educational Machines (e.g., Piston Engine, Variable-Sweep UAV, Landing Gear, Turbine)
+model Machine {
+  id            String         @id // e.g. "spectre-v-sweep-uav", "radial-engine-9cyl", "vtol-tiltrotor"
+  slug          String         @unique
+  name          String
+  category      String         // "Aerospace Kinematics", "Propulsion", "Terramechanics"
+  description   String
+  glbModelUrl   String
+  difficulty    String         @default("INTERMEDIATE") // "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
+  baseStats     Json
+  createdAt     DateTime       @default(now())
+
+  parts         Part[]
+  assemblySteps AssemblyStep[]
+  quizzes       Quiz[]
+  attempts      Attempt[]
+  progress      Progress[]
+
+  @@map("machines")
+}
+
+// Machine Sub-Assembly Components
+model Part {
+  id            String         @id @default(uuid())
+  machineId     String
+  machine       Machine        @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  meshName      String         // Matches exact node in Blender scene graph
+  name          String
+  material      String         // e.g. "Titanium-Ti6Al4V", "Carbon-Fiber", "High-Carbon Steel"
+  description   String
+  function      String         // Mechanical engineering purpose & load-bearing role
+  massKg        Float          @default(1.0)
+  kinematicType String         @default("RIGID") // "ROTATIONAL" | "TRANSLATIONAL" | "PLANAR" | "RIGID"
+  boundingVolume Json?
+
+  assemblySteps AssemblyStep[]
+  questions     Question[]
+
+  @@unique([machineId, meshName])
+  @@map("parts")
+}
+
+// Sequential Assembly & Disassembly Guidance
+enum AssemblyAction {
+  DISASSEMBLE
+  ASSEMBLE
+  INSPECT
+  ALIGN
+}
+
+model AssemblyStep {
+  id             String         @id @default(uuid())
+  machineId      String
+  machine        Machine        @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  partId         String
+  part           Part           @relation(fields: [partId], references: [id], onDelete: Cascade)
+  stepOrder      Int            // 1, 2, 3...
+  action         AssemblyAction @default(DISASSEMBLE)
+  targetPosition Json           // [x, y, z] target displacement vector
+  targetRotation Json?          // [qx, qy, qz, qw] target orientation
+  tolerance      Float          @default(0.05) // Positional tolerance in meters
+  hint           String
+  safetyWarning  String?
+
+  @@unique([machineId, stepOrder])
+  @@map("assembly_steps")
+}
+
+// Student Attempt Logs for Disassembly Practice & Exams
+enum AttemptMode {
+  FREE_INSPECT
+  GUIDED_DISASSEMBLY
+  TIMED_EXAM
+}
+
+model Attempt {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  machineId   String
+  machine     Machine     @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  mode        AttemptMode @default(GUIDED_DISASSEMBLY)
+  timeSeconds Int
+  errorsCount Int         @default(0)
+  score       Int         // 0 to 1000
+  completed   Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  @@index([userId, machineId])
+  @@map("attempts")
+}
+
+// Spatial Machine Assessment Quizzes
+model Quiz {
+  id           String        @id @default(uuid())
+  machineId    String
+  machine      Machine       @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  passingScore Int           @default(70) // Percentage
+  createdAt    DateTime      @default(now())
+
+  questions    Question[]
+  quizAttempts QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  IDENTIFY_PART
+  DISASSEMBLY_ORDER
+}
+
+model Question {
+  id            String       @id @default(uuid())
+  quizId        String
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  partId        String?
+  part          Part?        @relation(fields: [partId], references: [id], onDelete: SetNull)
+  prompt        String
+  questionType  QuestionType @default(MULTIPLE_CHOICE)
+  options       Json         // Array of choice strings
+  correctAnswer String
+  explanation   String?
+
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId           String
+  quiz             Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score            Int
+  passed           Boolean
+  submittedAnswers Json
+  completedAt      DateTime @default(now())
+
+  @@map("quiz_attempts")
+}
+
+// Student Aggregate Progress & Mastery
+model Progress {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  machineId         String
+  machine           Machine  @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  masteryScore      Int      @default(0) // 0 - 100%
+  lastStepCompleted Int      @default(0)
+  quizzesPassed     Int      @default(0)
+  updatedAt         DateTime @updatedAt
+
+  @@unique([userId, machineId])
+  @@map("progress")
+}
+
+// Sandbox & Vehicle Loadout Storage (from Phase 0/1)
 model VehicleBase {
-  id                   String           @id // e.g. "spectre-rs", "apex-nomad"
+  id                   String           @id
   name                 String
   description          String
   glbAssetUrl          String
@@ -35,26 +210,26 @@ model VehicleBase {
 }
 
 model VehicleLoadout {
-  id            String      @id @default(uuid())
-  userId        String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  vehicleBaseId String
-  vehicleBase   VehicleBase @relation(fields: [vehicleBaseId], references: [id], onDelete: Cascade)
-  name          String
-  activeMode    String      @default("STREET") // "STREET" | "OFFROAD" | "FLIGHT"
-  morphSettings Json
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleBaseId  String
+  vehicleBase    VehicleBase @relation(fields: [vehicleBaseId], references: [id], onDelete: Cascade)
+  name           String
+  activeMode     String      @default("STREET")
+  morphSettings  Json
   materialColors Json
-  tuningStats   Json?
-  isFavorite    Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  lapTimes      LapTime[]
+  tuningStats    Json?
+  isFavorite     Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  lapTimes       LapTime[]
 
   @@map("vehicle_loadouts")
 }
 
 model Track {
-  id              String    @id // e.g. "neon-canyon", "cyber-grid"
+  id              String    @id
   name            String
   description     String
   glbTrackUrl     String

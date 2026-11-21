@@ -1,0 +1,440 @@
+openapi: 3.1.0
+info:
+  title: MorphDrive Educational Mechanism & Kinematics API
+  version: 1.0.0
+  description: |
+    Comprehensive REST API for 3D educational machine inspection, multi-axis disassembly,
+    spatial assessment quizzes, and student mastery tracking.
+servers:
+  - url: http://localhost:4000
+    description: Local Development Environment
+  - url: https://api.morphdrive.io
+    description: Production Cloud Edge Environment
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: morphdrive-api
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/machines:
+    get:
+      summary: List all available educational machines
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            example: Aerospace Kinematics
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  machines:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Machine'
+
+  /api/machines/{id}:
+    get:
+      summary: Retrieve detailed machine metadata, parts hierarchy, and kinematics
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: spectre-v-sweep-uav
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/machines/{id}/assembly-steps:
+    get:
+      summary: Retrieve sequential assembly/disassembly steps for guided learning
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  steps:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssemblyStep'
+
+  /api/attempts:
+    post:
+      summary: Record a completed guided disassembly session
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAttemptInput'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attempt'
+
+  /api/quizzes/machine/{machineId}:
+    get:
+      summary: Fetch 3D spatial assessment quiz for a specific machine
+      parameters:
+        - name: machineId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quiz'
+
+  /api/quizzes/{id}/submit:
+    post:
+      summary: Grade spatial assessment answers and calculate mastery
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitQuizInput'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizResult'
+
+  /api/progress/{machineId}:
+    get:
+      summary: Get student progress and mastery score for a machine
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: machineId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progress'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Machine not found
+
+  schemas:
+    Machine:
+      type: object
+      required:
+        - id
+        - slug
+        - name
+        - category
+        - glbModelUrl
+        - difficulty
+      properties:
+        id:
+          type: string
+        slug:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        glbModelUrl:
+          type: string
+        difficulty:
+          type: string
+          enum: [BEGINNER, INTERMEDIATE, ADVANCED]
+        baseStats:
+          type: object
+
+    Part:
+      type: object
+      required:
+        - id
+        - meshName
+        - name
+        - material
+        - function
+      properties:
+        id:
+          type: string
+          format: uuid
+        machineId:
+          type: string
+        meshName:
+          type: string
+        name:
+          type: string
+        material:
+          type: string
+        description:
+          type: string
+        function:
+          type: string
+        massKg:
+          type: number
+        kinematicType:
+          type: string
+          enum: [ROTATIONAL, TRANSLATIONAL, PLANAR, RIGID]
+
+    MachineDetail:
+      allOf:
+        - $ref: '#/components/schemas/Machine'
+        - type: object
+          properties:
+            parts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Part'
+
+    AssemblyStep:
+      type: object
+      required:
+        - id
+        - stepOrder
+        - partId
+        - action
+        - targetPosition
+        - tolerance
+        - hint
+      properties:
+        id:
+          type: string
+          format: uuid
+        stepOrder:
+          type: integer
+        partId:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum: [DISASSEMBLE, ASSEMBLE, INSPECT, ALIGN]
+        targetPosition:
+          type: array
+          items:
+            type: number
+          example: [0.0, 0.9, 0.0]
+        tolerance:
+          type: number
+          example: 0.05
+        hint:
+          type: string
+        safetyWarning:
+          type: string
+          nullable: true
+
+    CreateAttemptInput:
+      type: object
+      required:
+        - machineId
+        - mode
+        - timeSeconds
+        - errorsCount
+        - score
+      properties:
+        machineId:
+          type: string
+        mode:
+          type: string
+          enum: [FREE_INSPECT, GUIDED_DISASSEMBLY, TIMED_EXAM]
+        timeSeconds:
+          type: integer
+        errorsCount:
+          type: integer
+        score:
+          type: integer
+          minimum: 0
+          maximum: 1000
+
+    Attempt:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        machineId:
+          type: string
+        mode:
+          type: string
+        timeSeconds:
+          type: integer
+        errorsCount:
+          type: integer
+        score:
+          type: integer
+        completed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        machineId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        passingScore:
+          type: integer
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        partId:
+          type: string
+          format: uuid
+          nullable: true
+        prompt:
+          type: string
+        questionType:
+          type: string
+          enum: [MULTIPLE_CHOICE, IDENTIFY_PART, DISASSEMBLY_ORDER]
+        options:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+          nullable: true
+
+    SubmitQuizInput:
+      type: object
+      required:
+        - answers
+      properties:
+        answers:
+          type: array
+          items:
+            type: object
+            required:
+              - questionId
+              - selectedAnswer
+            properties:
+              questionId:
+                type: string
+                format: uuid
+              selectedAnswer:
+                type: string
+
+    QuizResult:
+      type: object
+      properties:
+        score:
+          type: integer
+        passed:
+          type: boolean
+        correctCount:
+          type: integer
+        totalCount:
+          type: integer
+        masteryScore:
+          type: integer
+
+    Progress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        machineId:
+          type: string
+        masteryScore:
+          type: integer
+        lastStepCompleted:
+          type: integer
+        quizzesPassed:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
