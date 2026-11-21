@@ -8,14 +8,18 @@ export const GarageCanvas: React.FC = () => {
     <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
       <Canvas
         shadows
-        camera={{ position: [4.5, 2.2, 5.0], fov: 42 }}
-        gl={{ antialias: true, powerPreference: "high-performance" }}
+        camera={{ position: [4.8, 2.4, 5.2], fov: 42 }}
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          localClippingEnabled: true,
+        }}
       >
         <color attach="background" args={["#0a0b0e"]} />
         <fog attach="fog" args={["#0a0b0e", 10, 25]} />
 
         {/* Studio Lighting */}
-        <ambientLight intensity={0.7} />
+        <ambientLight intensity={0.75} />
         <directionalLight
           position={[6, 8, 4]}
           intensity={1.8}
@@ -30,7 +34,7 @@ export const GarageCanvas: React.FC = () => {
           <Environment preset="city" />
         </Suspense>
 
-        {/* 3D Morphable Vehicle */}
+        {/* 3D Morphable & Inspectable Vehicle */}
         <Suspense fallback={null}>
           <VehiclePreview />
         </Suspense>
@@ -39,24 +43,24 @@ export const GarageCanvas: React.FC = () => {
         <ContactShadows
           position={[0, 0, 0]}
           opacity={0.8}
-          scale={12}
+          scale={14}
           blur={1.8}
-          far={4}
+          far={5}
           color="#000000"
         />
 
-        {/* Circular Grid Platform */}
+        {/* Circular Calibration Platform with Radial Grid */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-          <circleGeometry args={[6, 64]} />
+          <circleGeometry args={[6.5, 64]} />
           <meshStandardMaterial color="#111318" roughness={0.7} metalness={0.4} />
         </mesh>
 
         {/* Orbit Camera Controls */}
         <OrbitControls
-          enablePan={false}
-          minDistance={3.5}
-          maxDistance={12}
-          minPolarAngle={Math.PI / 6}
+          enablePan={true}
+          minDistance={2.5}
+          maxDistance={14}
+          minPolarAngle={Math.PI / 8}
           maxPolarAngle={Math.PI / 2 - 0.05}
           dampingFactor={0.05}
         />

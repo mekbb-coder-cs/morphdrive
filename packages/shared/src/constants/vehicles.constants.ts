@@ -3,6 +3,8 @@ import { MorphSettings, MaterialColors, TuningStats } from "../schemas/vehicle.s
 export interface VehicleBasePreset {
   id: string;
   name: string;
+  category: string;
+  mechanismPrinciple: string;
   description: string;
   glbAssetUrl: string;
   defaultMorphSettings: MorphSettings;
@@ -13,13 +15,15 @@ export interface VehicleBasePreset {
 export const STARTER_VEHICLES: VehicleBasePreset[] = [
   {
     id: "spectre-rs",
-    name: "Spectre RS",
-    description: "High-downforce cyber roadster with adaptive aerodynamic splitters and flight gliders.",
+    name: "Spectre V-Sweep UAV",
+    category: "Aerospace Kinematics",
+    mechanismPrinciple: "Variable-Sweep Wing & Camber Morphing",
+    description: "High-speed aerospace research UAV demonstrating pivot spar articulation, variable sweep angles, and deployable glider surfaces.",
     glbAssetUrl: "/models/spectre_rs.glb",
     defaultMorphSettings: {
       suspensionHeight: 0.15,
       aerodynamicWings: 0.0,
-      widebodyFlare: 0.5,
+      widebodyFlare: 0.4,
       chassisAggression: 0.8,
       thrusterExtend: 0.0,
     },
@@ -42,14 +46,16 @@ export const STARTER_VEHICLES: VehicleBasePreset[] = [
   },
   {
     id: "apex-nomad",
-    name: "Apex Nomad",
-    description: "Rugged all-terrain dune climber with hydraulic suspension lift and heavy-duty chassis guards.",
+    name: "Apex Nomad Rover",
+    category: "Terramechanics",
+    mechanismPrinciple: "Multi-Link Adaptive Suspension Lift",
+    description: "Planetary exploration rover equipped with hydraulic rocker-bogie linkages, variable stance width, and active clearance control.",
     glbAssetUrl: "/models/apex_nomad.glb",
     defaultMorphSettings: {
       suspensionHeight: 0.85,
       aerodynamicWings: 0.0,
       widebodyFlare: 0.9,
-      chassisAggression: 0.4,
+      chassisAggression: 0.3,
       thrusterExtend: 0.0,
     },
     defaultColors: {
@@ -71,8 +77,10 @@ export const STARTER_VEHICLES: VehicleBasePreset[] = [
   },
   {
     id: "valkyrie-aero",
-    name: "Valkyrie Aero",
-    description: "Experimental VTOL hybrid built for extreme aerial glide velocity and supersonic canyon runs.",
+    name: "Valkyrie Vector Hybrid",
+    category: "Propulsion & V/STOL",
+    mechanismPrinciple: "Variable-Area Iris Nozzle & Tilt Actuation",
+    description: "Supersonic propulsion testbed with synchronized iris petal convergent-divergent nozzle expansion and variable thrust vectoring.",
     glbAssetUrl: "/models/valkyrie_aero.glb",
     defaultMorphSettings: {
       suspensionHeight: 0.3,
