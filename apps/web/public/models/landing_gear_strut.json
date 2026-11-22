@@ -1,0 +1,299 @@
+{
+  "machineId": "landing-gear-strut",
+  "name": "Aircraft Oleo-Pneumatic Landing Gear Strut",
+  "category": "Aerospace Structural & Hydraulic Mechanisms",
+  "difficulty": "INTERMEDIATE",
+  "totalTriangles": 536,
+  "glbAssetUrl": "/models/landing_gear_strut.glb",
+  "description": "Aircraft main shock absorber strut illustrating oleo-pneumatic nitrogen/oil kinetic energy dissipation and scissor torque link alignment.",
+  "parts": [
+    {
+      "id": "main-cyl",
+      "meshName": "MainCylinder",
+      "displayName": "Outer Shock Cylinder",
+      "material": "300M Ultra-High-Strength Steel",
+      "function": "Airframe attachment trunnion holding high-pressure hydraulic fluid and nitrogen precharge.",
+      "massKg": 32.5,
+      "pivotOrigin": [
+        0,
+        0.6,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "oleo-piston",
+      "meshName": "OleoPiston",
+      "displayName": "Hard-Chromed Oleo Piston",
+      "material": "Chromium-Plated 300M Steel",
+      "function": "Telescoping piston tube forcing hydraulic oil through dampening metering pin orifice.",
+      "massKg": 19.8,
+      "pivotOrigin": [
+        0,
+        -0.4,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    },
+    {
+      "id": "torque-upper",
+      "meshName": "UpperTorqueLink",
+      "displayName": "Upper Torque Scissor Link",
+      "material": "7075-T73 Aluminum Forging",
+      "function": "Transmits landing torsional and steering moments while allowing free vertical stroke.",
+      "massKg": 3.4,
+      "pivotOrigin": [
+        0.32,
+        0.3,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "torque-lower",
+      "meshName": "LowerTorqueLink",
+      "displayName": "Lower Torque Scissor Link",
+      "material": "7075-T73 Aluminum Forging",
+      "function": "Pairs with upper scissor to prevent piston rotation inside cylinder during rollout.",
+      "massKg": 3.4,
+      "pivotOrigin": [
+        0.32,
+        -0.2,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "wheel-axle",
+      "meshName": "WheelAxle",
+      "displayName": "Dual Wheel Axle Sleeve",
+      "material": "Titanium Ti-10V-2Fe-3Al",
+      "function": "Supports precision tapered roller bearings for high-speed dual aircraft landing wheels.",
+      "massKg": 8.2,
+      "pivotOrigin": [
+        0,
+        -1.1,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "tire-left",
+      "meshName": "Tire_Left",
+      "displayName": "Left Main Wheel Assembly",
+      "material": "Reinforced Rubber & Beryllium-Copper Rim",
+      "function": "Provides runway touchdown friction and absorbs initial high-frequency bump impacts.",
+      "massKg": 24,
+      "pivotOrigin": [
+        -0.55,
+        -1.1,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "tire-right",
+      "meshName": "Tire_Right",
+      "displayName": "Right Main Wheel Assembly",
+      "material": "Reinforced Rubber & Beryllium-Copper Rim",
+      "function": "Co-axial landing gear tire maintaining dynamic directional tracking on touchdown.",
+      "massKg": 24,
+      "pivotOrigin": [
+        0.55,
+        -1.1,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "retract-act",
+      "meshName": "RetractActuator",
+      "displayName": "Hydraulic Retraction Actuator",
+      "material": "High-Pressure Hydraulic Steel",
+      "function": "Pivots entire landing gear strut into wing well cavity post-takeoff.",
+      "massKg": 7.6,
+      "pivotOrigin": [
+        -0.4,
+        1.1,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    }
+  ],
+  "hierarchy": {
+    "root": "MainCylinder",
+    "children": [
+      {
+        "node": "RetractActuator",
+        "children": []
+      },
+      {
+        "node": "UpperTorqueLink",
+        "children": [
+          "LowerTorqueLink"
+        ]
+      },
+      {
+        "node": "OleoPiston",
+        "children": [
+          {
+            "node": "WheelAxle",
+            "children": [
+              "Tire_Left",
+              "Tire_Right"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "explodedView": {
+    "MainCylinder": [
+      0,
+      0.5,
+      0
+    ],
+    "OleoPiston": [
+      0,
+      -0.8,
+      0
+    ],
+    "UpperTorqueLink": [
+      0.8,
+      0.3,
+      0
+    ],
+    "LowerTorqueLink": [
+      0.8,
+      -0.2,
+      0
+    ],
+    "WheelAxle": [
+      0,
+      -1.2,
+      0
+    ],
+    "Tire_Left": [
+      -1.1,
+      -1.1,
+      0
+    ],
+    "Tire_Right": [
+      1.1,
+      -1.1,
+      0
+    ],
+    "RetractActuator": [
+      -0.9,
+      1.1,
+      0
+    ]
+  },
+  "assemblySteps": [
+    {
+      "stepOrder": 1,
+      "partId": "torque-upper",
+      "meshName": "UpperTorqueLink",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0.32,
+          0.3,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0.25,
+          0.968
+        ]
+      },
+      "endTransform": {
+        "position": [
+          1.1,
+          0.3,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Remove cotter pin and unthread center apex hinge bolt connecting torque scissors.",
+      "safetyWarning": "Release hydraulic pressure before servicing scissor linkages."
+    },
+    {
+      "stepOrder": 2,
+      "partId": "tire-left",
+      "meshName": "Tire_Left",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          -0.55,
+          -1.1,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          -1.4,
+          -1.1,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Loosen wheel axle retaining nut and slide left tire outward along lateral axis.",
+      "safetyWarning": "Ensure gear is placed on jacks and safety blocks."
+    },
+    {
+      "stepOrder": 3,
+      "partId": "oleo-piston",
+      "meshName": "OleoPiston",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          -0.4,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          -1.6,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.04,
+      "hint": "Depressurize nitrogen charge valve and slide lower piston assembly out of cylinder.",
+      "safetyWarning": "HIGH PRESSURE HAZARD. Verify gauge reads 0 PSI before unthreading gland seal."
+    }
+  ]
+}

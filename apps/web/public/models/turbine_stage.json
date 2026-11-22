@@ -1,0 +1,258 @@
+{
+  "machineId": "turbine-stage",
+  "name": "Axial Flow Gas Turbine Stage",
+  "category": "Aerospace Propulsion & Turbomachinery",
+  "difficulty": "ADVANCED",
+  "totalTriangles": 688,
+  "glbAssetUrl": "/models/turbine_stage.glb",
+  "description": "High-pressure axial gas turbine stage demonstrating stationary nozzle guide vane expansion, supersonic aerofoil rotor blade deflection, and shaft work extraction.",
+  "parts": [
+    {
+      "id": "turbine-casing",
+      "meshName": "TurbineCasing",
+      "displayName": "Annular Containment Casing",
+      "material": "Waspaloy Nickel-Base Superalloy",
+      "function": "High-temperature outer shroud maintaining critical tip clearance (0.5mm) over rotating blades.",
+      "massKg": 42,
+      "pivotOrigin": [
+        0,
+        0,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "stator-vane",
+      "meshName": "StatorVaneRing",
+      "displayName": "Nozzle Guide Vane Stator Ring",
+      "material": "CMSX-4 Single-Crystal Superalloy",
+      "function": "Stationary aerofoils accelerating and turning hot combustor gas into the rotor at optimum angle.",
+      "massKg": 18.5,
+      "pivotOrigin": [
+        0,
+        0,
+        -0.22
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "rotor-disk",
+      "meshName": "RotorDisk",
+      "displayName": "Blisk Turbine Rotor Disk",
+      "material": "Forged Udimet 720LI",
+      "function": "Holds turbine blades via fir-tree root slots; sustains extreme centrifugal rotational stress (15,000 RPM).",
+      "massKg": 28,
+      "pivotOrigin": [
+        0,
+        0,
+        0.18
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "rotor-blades",
+      "meshName": "RotorBlades",
+      "displayName": "Cooled Aerofoil Rotor Blades",
+      "material": "Single-Crystal Inconel 718 with Ceramic TBC",
+      "function": "Extracts enthalpy from high-speed gas stream, generating rotational shaft power.",
+      "massKg": 12.4,
+      "pivotOrigin": [
+        0,
+        0,
+        0.18
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "shaft-spindle",
+      "meshName": "ShaftSpindle",
+      "displayName": "Central Hollow Drive Shaft",
+      "material": "Maraging Steel 300",
+      "function": "Transmits extracted turbine shaft work forward to drive compressor stages and generator.",
+      "massKg": 14.6,
+      "pivotOrigin": [
+        0,
+        0,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "combustor-liner",
+      "meshName": "CombustorLiner",
+      "displayName": "Combustor Transition Duct",
+      "material": "Hastelloy X Superalloy",
+      "function": "Channels 1,400°C primary gas from combustor burner cans directly into turbine inlet.",
+      "massKg": 9.8,
+      "pivotOrigin": [
+        0,
+        0,
+        -0.55
+      ],
+      "kinematicType": "RIGID"
+    }
+  ],
+  "hierarchy": {
+    "root": "TurbineCasing",
+    "children": [
+      {
+        "node": "CombustorLiner",
+        "children": []
+      },
+      {
+        "node": "StatorVaneRing",
+        "children": []
+      },
+      {
+        "node": "ShaftSpindle",
+        "children": [
+          {
+            "node": "RotorDisk",
+            "children": [
+              "RotorBlades"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "explodedView": {
+    "TurbineCasing": [
+      0,
+      0,
+      0
+    ],
+    "CombustorLiner": [
+      0,
+      0,
+      -1.3
+    ],
+    "StatorVaneRing": [
+      0,
+      0,
+      -0.8
+    ],
+    "RotorDisk": [
+      0,
+      0,
+      0.9
+    ],
+    "RotorBlades": [
+      0,
+      0,
+      1.2
+    ],
+    "ShaftSpindle": [
+      0,
+      0,
+      1.8
+    ]
+  },
+  "assemblySteps": [
+    {
+      "stepOrder": 1,
+      "partId": "combustor-liner",
+      "meshName": "CombustorLiner",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0,
+          -0.55
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          0,
+          -1.6
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Unclamp transition duct V-band clamp and slide forward.",
+      "safetyWarning": "Inspect ceramic thermal barrier coating for spallation."
+    },
+    {
+      "stepOrder": 2,
+      "partId": "stator-vane",
+      "meshName": "StatorVaneRing",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0,
+          -0.22
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          0,
+          -1
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.04,
+      "hint": "Release anti-rotation retaining dogs and extract stator vane segments.",
+      "safetyWarning": "Handle cooling air supply tubes with care."
+    },
+    {
+      "stepOrder": 3,
+      "partId": "rotor-disk",
+      "meshName": "RotorDisk",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0,
+          0.18
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          0,
+          1.4
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.03,
+      "hint": "Unthread high-torque curvic coupling locknut and pull rotor disk off shaft splines.",
+      "safetyWarning": "Protect blade tips from impacts against casing shroud."
+    }
+  ]
+}
