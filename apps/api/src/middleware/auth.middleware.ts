@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { Role } from "@prisma/client";
 
 export interface AuthenticatedUser {
   userId: string;
   email: string;
   username: string;
+  role: Role;
 }
 
 declare global {
@@ -32,4 +34,23 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   } catch (err) {
     return res.status(401).json({ error: "Invalid or expired authentication token" });
   }
+}
+
+/**
+ * Role-Based Access Control (RBAC) middleware
+ */
+export function requireRole(...allowedRoles: Role[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        error: `Forbidden: Access requires one of [${allowedRoles.join(", ")}], but your role is ${req.user.role}`,
+      });
+    }
+
+    return next();
+  };
 }

@@ -3,6 +3,7 @@ import { hash, verify } from "@node-rs/argon2";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.js";
 import { RegisterUserInput, LoginUserInput } from "@morphdrive/shared";
+import { Role } from "@prisma/client";
 
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "fallback_morphdrive_secret_key";
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "fallback_refresh_morphdrive_key";
@@ -11,6 +12,9 @@ export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, username, password }: RegisterUserInput = req.body;
+      const requestedRole: Role = req.body.role && ["STUDENT", "INSTRUCTOR"].includes(req.body.role) 
+        ? req.body.role 
+        : Role.STUDENT;
 
       const existing = await prisma.user.findFirst({
         where: { OR: [{ email }, { username }] },
@@ -22,10 +26,10 @@ export class AuthController {
 
       const passwordHash = await hash(password);
       const user = await prisma.user.create({
-        data: { email, username, passwordHash },
+        data: { email, username, passwordHash, role: requestedRole },
       });
 
-      const tokenPayload = { userId: user.id, email: user.email, username: user.username };
+      const tokenPayload = { userId: user.id, email: user.email, username: user.username, role: user.role };
       const accessToken = jwt.sign(tokenPayload, JWT_ACCESS_SECRET, { expiresIn: "15m" });
       const refreshToken = jwt.sign(tokenPayload, JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
@@ -37,7 +41,7 @@ export class AuthController {
       });
 
       return res.status(201).json({
-        user: { id: user.id, email: user.email, username: user.username, createdAt: user.createdAt },
+        user: { id: user.id, email: user.email, username: user.username, role: user.role, createdAt: user.createdAt },
         accessToken,
       });
     } catch (err) {
@@ -64,7 +68,7 @@ export class AuthController {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      const tokenPayload = { userId: user.id, email: user.email, username: user.username };
+      const tokenPayload = { userId: user.id, email: user.email, username: user.username, role: user.role };
       const accessToken = jwt.sign(tokenPayload, JWT_ACCESS_SECRET, { expiresIn: "15m" });
       const refreshToken = jwt.sign(tokenPayload, JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
@@ -76,7 +80,7 @@ export class AuthController {
       });
 
       return res.json({
-        user: { id: user.id, email: user.email, username: user.username, createdAt: user.createdAt },
+        user: { id: user.id, email: user.email, username: user.username, role: user.role, createdAt: user.createdAt },
         accessToken,
       });
     } catch (err) {
@@ -91,9 +95,15 @@ export class AuthController {
         return res.status(401).json({ error: "Refresh token missing" });
       }
 
-      const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as { userId: string; email: string; username: string };
+      const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as {
+        userId: string;
+        email: string;
+        username: string;
+        role: Role;
+      };
+
       const newAccessToken = jwt.sign(
-        { userId: payload.userId, email: payload.email, username: payload.username },
+        { userId: payload.userId, email: payload.email, username: payload.username, role: payload.role },
         JWT_ACCESS_SECRET,
         { expiresIn: "15m" }
       );
@@ -114,7 +124,7 @@ export class AuthController {
       if (!req.user) return res.status(401).json({ error: "Unauthorized" });
       const user = await prisma.user.findUnique({
         where: { id: req.user.userId },
-        select: { id: true, email: true, username: true, createdAt: true },
+        select: { id: true, email: true, username: true, role: true, createdAt: true },
       });
       return res.json({ user });
     } catch (err) {
