@@ -6,7 +6,7 @@ import { MorphControls } from "./MorphControls";
 import { InspectionControls } from "./InspectionControls";
 import { ColorPicker } from "./ColorPicker";
 import { VehicleStatsMeter } from "./VehicleStatsMeter";
-import { Play, RotateCcw, Save, Sliders, Split, Palette, Gauge } from "lucide-react";
+import { Play, RotateCcw, Save, Sliders, Split, Palette, Gauge, ExternalLink, Layers, BookOpen } from "lucide-react";
 
 export const GarageUI: React.FC = () => {
   const { currentVehicle, selectVehicle, resetCustomization, activeTab, setActiveTab } = useVehicleStore();
@@ -58,7 +58,32 @@ export const GarageUI: React.FC = () => {
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {/* External Navigation Shortcuts */}
+          <a
+            href="/prototype.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-[#12141a]/90 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 hover:text-white transition-all shadow-md"
+            title="Open Interactive Clickable UI Prototype"
+          >
+            <Layers size={14} />
+            <span>Interactive Prototype</span>
+            <ExternalLink size={12} className="opacity-70" />
+          </a>
+
+          <a
+            href="http://localhost:4000/api-docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-[#12141a]/90 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 hover:text-white transition-all shadow-md"
+            title="Open Swagger OpenAPI Documentation"
+          >
+            <BookOpen size={14} />
+            <span>Swagger API</span>
+            <ExternalLink size={12} className="opacity-70" />
+          </a>
+
           <button
             onClick={resetCustomization}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-[#12141a]/80 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
