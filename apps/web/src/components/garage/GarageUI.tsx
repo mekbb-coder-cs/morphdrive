@@ -6,7 +6,7 @@ import { MorphControls } from "./MorphControls";
 import { InspectionControls } from "./InspectionControls";
 import { ColorPicker } from "./ColorPicker";
 import { VehicleStatsMeter } from "./VehicleStatsMeter";
-import { Play, RotateCcw, Save, Sliders, Split, Palette, Gauge, ExternalLink, Layers, BookOpen, Cpu } from "lucide-react";
+import { Play, RotateCcw, Save, Sliders, Split, Palette, Gauge, ExternalLink, Layers, BookOpen, Cpu, Wrench } from "lucide-react";
 
 export const GarageUI: React.FC = () => {
   const { currentVehicle, selectVehicle, resetCustomization, activeTab, setActiveTab } = useVehicleStore();
@@ -66,6 +66,16 @@ export const GarageUI: React.FC = () => {
           >
             <Cpu size={14} />
             <span>Inspect Machines</span>
+          </button>
+
+          {/* Switch to Disassembly Lab */}
+          <button
+            onClick={() => setView("DISASSEMBLE")}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-400/50 text-emerald-300 hover:brightness-125 transition-all shadow-md shadow-emerald-500/20"
+            title="Open Interactive Disassembly Lab"
+          >
+            <Wrench size={14} />
+            <span>Disassembly Lab</span>
           </button>
 
           {/* External Navigation Shortcuts */}

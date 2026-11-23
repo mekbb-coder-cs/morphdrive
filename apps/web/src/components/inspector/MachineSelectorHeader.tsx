@@ -1,5 +1,6 @@
 import React from "react";
 import { useInspectionStore } from "../../stores/useInspectionStore";
+import { useDisassemblyStore } from "../../stores/useDisassemblyStore";
 import { MACHINES_LIST, MachineMetadata } from "../../data/machinesData";
 import { useGameStore } from "../../stores/useGameStore";
 import {
@@ -89,7 +90,10 @@ export const MachineSelectorHeader: React.FC<Props> = ({ metadata }) => {
       <div className="flex items-center gap-2.5">
         {/* Switch to Disassembly Lab */}
         <button
-          onClick={() => setView("DISASSEMBLE")}
+          onClick={() => {
+            useDisassemblyStore.getState().setMachineId(currentMachineId);
+            setView("DISASSEMBLE");
+          }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/30 transition-all shadow-sm"
           title="Switch to Interactive Disassembly Mode"
         >

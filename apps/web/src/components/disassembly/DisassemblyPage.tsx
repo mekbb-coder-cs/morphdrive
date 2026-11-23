@@ -1,5 +1,6 @@
 import React from "react";
 import { useDisassemblyStore } from "../../stores/useDisassemblyStore";
+import { useInspectionStore } from "../../stores/useInspectionStore";
 import { getMachineById, MACHINES_LIST } from "../../data/machinesData";
 import { useGameStore } from "../../stores/useGameStore";
 import { DisassemblyCanvas } from "./DisassemblyCanvas";
@@ -89,7 +90,10 @@ export const DisassemblyPage: React.FC = () => {
         <div className="flex items-center gap-2">
           {/* Switch to Inspect Mode */}
           <button
-            onClick={() => setView("INSPECT")}
+            onClick={() => {
+              useInspectionStore.getState().setMachineId(currentMachineId);
+              setView("INSPECT");
+            }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#12151f] border border-cyan-400/30 text-cyan-300 hover:bg-cyan-500/20 hover:text-white transition-all shadow-sm"
             title="Switch to 3D Inspection Mode"
           >

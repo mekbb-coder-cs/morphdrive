@@ -87,11 +87,11 @@ export const DisassemblyModelRenderer: React.FC<Props> = ({ metadata, orbitContr
       const isDisassembled = disassembledParts.includes(name);
 
       if (isDisassembled) {
-        // Disassembled: animate to virtual workbench tray (x: 2.2, staggered z and y)
+        // Disassembled: animate to virtual workbench tray (world x = 2.0, resting on tray)
         const idx = disassembledParts.indexOf(name);
-        const trayX = 2.0;
-        const trayY = -0.5 + Math.floor(idx / 3) * 0.35;
-        const trayZ = -0.8 + (idx % 3) * 0.8;
+        const trayX = 2.5;
+        const trayY = -0.9 + Math.floor(idx / 3) * 0.22;
+        const trayZ = -0.75 + (idx % 3) * 0.75;
 
         mesh.position.x = THREE.MathUtils.damp(mesh.position.x, trayX, 8, delta);
         mesh.position.y = THREE.MathUtils.damp(mesh.position.y, trayY, 8, delta);
