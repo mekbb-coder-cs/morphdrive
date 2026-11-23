@@ -1,11 +1,16 @@
 import React from "react";
 import { GarageCanvas } from "./components/3d/GarageCanvas";
 import { GarageUI } from "./components/garage/GarageUI";
+import { MachineInspectionPage } from "./components/inspector/MachineInspectionPage";
 import { useGameStore } from "./stores/useGameStore";
 import { ArrowLeft } from "lucide-react";
 
 export const App: React.FC = () => {
   const { currentView, setView } = useGameStore();
+
+  if (currentView === "INSPECT") {
+    return <MachineInspectionPage />;
+  }
 
   return (
     <div className="w-screen h-screen relative bg-[#0a0b0e] overflow-hidden select-none">

@@ -1,0 +1,294 @@
+{
+  "machineId": "gearbox",
+  "name": "2-Speed Manual Transmission Gearbox",
+  "category": "Mechanical Power Transmission",
+  "difficulty": "INTERMEDIATE",
+  "totalTriangles": 616,
+  "glbAssetUrl": "/models/gearbox.glb",
+  "description": "Automotive countershaft manual gearbox illustrating torque gear multiplication, dog teeth engagement, and synchromesh friction cone alignment.",
+  "parts": [
+    {
+      "id": "trans-case",
+      "meshName": "TransmissionCase",
+      "displayName": "Transmission Housing Casing",
+      "material": "A380 Die-Cast Aluminum",
+      "function": "Rigid oil-sealed enclosure sustaining gear separation reaction forces.",
+      "massKg": 14.2,
+      "pivotOrigin": [
+        0,
+        0,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "input-shaft",
+      "meshName": "InputShaft",
+      "displayName": "Primary Input Shaft",
+      "material": "8620 Alloy Steel",
+      "function": "Direct engine clutch input driving countershaft gear cluster.",
+      "massKg": 4.8,
+      "pivotOrigin": [
+        0,
+        0.25,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "countershaft",
+      "meshName": "Countershaft",
+      "displayName": "Laygear Countershaft",
+      "material": "8620 Alloy Steel",
+      "function": "Intermediate cluster shaft distributing gear reduction ratios.",
+      "massKg": 5.6,
+      "pivotOrigin": [
+        0,
+        -0.3,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "output-shaft",
+      "meshName": "OutputShaft",
+      "displayName": "Main Output Shaft",
+      "material": "4340 Nickel-Chromium Steel",
+      "function": "Carries freewheeling drive gears and sends finalized torque to driveline.",
+      "massKg": 5.1,
+      "pivotOrigin": [
+        0.45,
+        0.25,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "gear-1st",
+      "meshName": "DriveGear_1st",
+      "displayName": "1st Speed Driven Gear",
+      "material": "Case-Hardened 20MnCr5",
+      "function": "Provides maximum low-speed mechanical gear reduction torque (3.5:1 ratio).",
+      "massKg": 2.3,
+      "pivotOrigin": [
+        0.45,
+        0.25,
+        -0.3
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "gear-2nd",
+      "meshName": "DriveGear_2nd",
+      "displayName": "2nd Speed Driven Gear",
+      "material": "Case-Hardened 20MnCr5",
+      "function": "Provides intermediate cruising speed gear reduction (1.9:1 ratio).",
+      "massKg": 1.8,
+      "pivotOrigin": [
+        0.45,
+        0.25,
+        0.3
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "synchro-ring",
+      "meshName": "SynchromeshRing",
+      "displayName": "Brass Synchronizer Baulk Ring",
+      "material": "High-Tensile Brass / Carbon Lining",
+      "function": "Matches shaft rotational speeds via conical friction before positive dog engagement.",
+      "massKg": 0.35,
+      "pivotOrigin": [
+        0.45,
+        0.25,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "shift-fork",
+      "meshName": "ShiftFork",
+      "displayName": "Gear Selector Shift Fork",
+      "material": "Cast Manganese Bronze",
+      "function": "Axially shifts the synchronizer sleeve to lock selected gear to the output shaft.",
+      "massKg": 0.85,
+      "pivotOrigin": [
+        0.45,
+        0.5,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    }
+  ],
+  "hierarchy": {
+    "root": "TransmissionCase",
+    "children": [
+      {
+        "node": "InputShaft",
+        "children": []
+      },
+      {
+        "node": "Countershaft",
+        "children": []
+      },
+      {
+        "node": "OutputShaft",
+        "children": [
+          "DriveGear_1st",
+          "DriveGear_2nd",
+          "SynchromeshRing",
+          "ShiftFork"
+        ]
+      }
+    ]
+  },
+  "explodedView": {
+    "TransmissionCase": [
+      0,
+      0,
+      0
+    ],
+    "InputShaft": [
+      0,
+      0,
+      -1.2
+    ],
+    "Countershaft": [
+      0,
+      -0.8,
+      0
+    ],
+    "OutputShaft": [
+      0,
+      0,
+      1.2
+    ],
+    "DriveGear_1st": [
+      0.8,
+      0,
+      -0.3
+    ],
+    "DriveGear_2nd": [
+      0.8,
+      0,
+      0.3
+    ],
+    "SynchromeshRing": [
+      0.8,
+      0,
+      0
+    ],
+    "ShiftFork": [
+      0,
+      0.9,
+      0
+    ]
+  },
+  "assemblySteps": [
+    {
+      "stepOrder": 1,
+      "partId": "shift-fork",
+      "meshName": "ShiftFork",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0.45,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0.45,
+          1.4,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Disconnect shift rail detent pin and pull shift fork vertically upwards.",
+      "safetyWarning": "Keep selector detent balls captured so springs do not eject."
+    },
+    {
+      "stepOrder": 2,
+      "partId": "synchro-ring",
+      "meshName": "SynchromeshRing",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0.45,
+          0.25,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          1.2,
+          0.25,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.03,
+      "hint": "Slide brass baulk ring off output shaft cone hub.",
+      "safetyWarning": "Inspect inner friction cone ridges for glazing."
+    },
+    {
+      "stepOrder": 3,
+      "partId": "output-shaft",
+      "meshName": "OutputShaft",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0.45,
+          0.25,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0.45,
+          0.25,
+          1.5
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Extract output shaft rear bearing snap ring and pull shaft longitudinally.",
+      "safetyWarning": "Do not drop needle roller bearings seated under loose gears."
+    }
+  ]
+}

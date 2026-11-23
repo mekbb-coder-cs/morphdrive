@@ -1,0 +1,425 @@
+{
+  "machineId": "single-cylinder-engine",
+  "name": "Single-Cylinder 4-Stroke Engine",
+  "category": "Internal Combustion & Thermodynamics",
+  "difficulty": "BEGINNER",
+  "totalTriangles": 484,
+  "glbAssetUrl": "/models/single_cylinder_engine.glb",
+  "description": "Educational 4-stroke reciprocating internal combustion engine demonstrating crankshaft rotation, connecting rod articulation, and piston wrist pin clearance.",
+  "parts": [
+    {
+      "id": "engine-block",
+      "meshName": "EngineBlock_Crankcase",
+      "displayName": "Engine Block Crankcase",
+      "material": "Cast Grey Iron (Class 35)",
+      "function": "Main structural containment supporting crankshaft main bearings and cylinder bore.",
+      "massKg": 18.5,
+      "pivotOrigin": [
+        0,
+        0,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "cylinder-head",
+      "meshName": "CylinderHead",
+      "displayName": "Cylinder Head",
+      "material": "A356 Aluminum Alloy",
+      "function": "Seals top combustion chamber; houses intake and exhaust poppet valves and spark plug.",
+      "massKg": 6.2,
+      "pivotOrigin": [
+        0,
+        0.95,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "crankshaft",
+      "meshName": "Crankshaft",
+      "displayName": "Balanced Crankshaft",
+      "material": "4340 Forged Steel",
+      "function": "Converts reciprocating linear piston motion into continuous rotational torque output.",
+      "massKg": 5.4,
+      "pivotOrigin": [
+        0,
+        -0.4,
+        0
+      ],
+      "kinematicType": "ROTATIONAL"
+    },
+    {
+      "id": "connecting-rod",
+      "meshName": "ConnectingRod",
+      "displayName": "I-Beam Connecting Rod",
+      "material": "Forged Titanium Ti-6Al-4V",
+      "function": "Transmits explosive gas combustion forces from piston crown to crankshaft throw journal.",
+      "massKg": 0.65,
+      "pivotOrigin": [
+        0,
+        0.05,
+        0
+      ],
+      "kinematicType": "PLANAR"
+    },
+    {
+      "id": "piston",
+      "meshName": "Piston",
+      "displayName": "Crown Piston",
+      "material": "Hypereutectic Al-Si Alloy",
+      "function": "Gas-tight reciprocating element transferring expanding combustion pressure into kinetic energy.",
+      "massKg": 0.42,
+      "pivotOrigin": [
+        0,
+        0.55,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    },
+    {
+      "id": "wrist-pin",
+      "meshName": "WristPin",
+      "displayName": "Hardened Gudgeon Pin",
+      "material": "Case-Hardened 8620 Alloy Steel",
+      "function": "High-shear cross pin articulately joining connecting rod small-end to piston inner pin bosses.",
+      "massKg": 0.09,
+      "pivotOrigin": [
+        0,
+        0.5,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    },
+    {
+      "id": "spark-plug",
+      "meshName": "SparkPlug",
+      "displayName": "High-Energy Spark Plug",
+      "material": "High-Alumina Ceramic & Nickel Alloy",
+      "function": "Delivers electrical high-voltage spark to ignite compressed air-fuel stoichiometric charge.",
+      "massKg": 0.06,
+      "pivotOrigin": [
+        0,
+        1.35,
+        0
+      ],
+      "kinematicType": "RIGID"
+    },
+    {
+      "id": "intake-valve",
+      "meshName": "IntakeValve",
+      "displayName": "Intake Poppet Valve",
+      "material": "Silchrome 1 Stainless Steel",
+      "function": "Opens synchronously during intake stroke to admit atmospheric fresh air-fuel mixture.",
+      "massKg": 0.08,
+      "pivotOrigin": [
+        -0.25,
+        0.95,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    },
+    {
+      "id": "exhaust-valve",
+      "meshName": "ExhaustValve",
+      "displayName": "Exhaust Poppet Valve",
+      "material": "Inconel 751 Superalloy",
+      "function": "Exposes exhaust port at exhaust stroke to evacuate high-temperature burnt gas.",
+      "massKg": 0.08,
+      "pivotOrigin": [
+        0.25,
+        0.95,
+        0
+      ],
+      "kinematicType": "TRANSLATIONAL"
+    }
+  ],
+  "hierarchy": {
+    "root": "EngineBlock_Crankcase",
+    "children": [
+      {
+        "node": "CylinderHead",
+        "children": [
+          "SparkPlug",
+          "IntakeValve",
+          "ExhaustValve"
+        ]
+      },
+      {
+        "node": "Crankshaft",
+        "children": [
+          {
+            "node": "ConnectingRod",
+            "children": [
+              {
+                "node": "Piston",
+                "children": [
+                  "WristPin"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "explodedView": {
+    "EngineBlock_Crankcase": [
+      0,
+      0,
+      0
+    ],
+    "CylinderHead": [
+      0,
+      0.8,
+      0
+    ],
+    "Crankshaft": [
+      0,
+      -0.7,
+      0
+    ],
+    "ConnectingRod": [
+      0,
+      0.2,
+      0.6
+    ],
+    "Piston": [
+      0,
+      0.9,
+      0
+    ],
+    "WristPin": [
+      0.7,
+      0.9,
+      0
+    ],
+    "SparkPlug": [
+      0,
+      1.4,
+      0
+    ],
+    "IntakeValve": [
+      -0.6,
+      1.2,
+      0
+    ],
+    "ExhaustValve": [
+      0.6,
+      1.2,
+      0
+    ]
+  },
+  "assemblySteps": [
+    {
+      "stepOrder": 1,
+      "partId": "spark-plug",
+      "meshName": "SparkPlug",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          1.35,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          2.75,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Unscrew and vertically extract spark plug from cylinder head socket.",
+      "safetyWarning": "Ensure engine is cold before handling threaded plug."
+    },
+    {
+      "stepOrder": 2,
+      "partId": "cylinder-head",
+      "meshName": "CylinderHead",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0.95,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          1.8,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Loosen head bolts in criss-cross pattern and lift head off the engine block.",
+      "safetyWarning": "Avoid scratching head gasket mating face."
+    },
+    {
+      "stepOrder": 3,
+      "partId": "wrist-pin",
+      "meshName": "WristPin",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0.8,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.03,
+      "hint": "Extract circlips and slide wrist pin horizontally along lateral X axis.",
+      "safetyWarning": "Support piston so it does not drop into the crankcase."
+    },
+    {
+      "stepOrder": 4,
+      "partId": "piston",
+      "meshName": "Piston",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0.55,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          1.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Carefully extract piston crown through the top of the cylinder bore.",
+      "safetyWarning": "Inspect piston skirts for friction scuffing."
+    },
+    {
+      "stepOrder": 5,
+      "partId": "connecting-rod",
+      "meshName": "ConnectingRod",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          0.05,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          0.05,
+          0.8
+        ],
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Unbolt big-end rod journal cap and lift connecting rod free.",
+      "safetyWarning": "Protect crank journal surface from rod bolt gouging."
+    },
+    {
+      "stepOrder": 6,
+      "partId": "crankshaft",
+      "meshName": "Crankshaft",
+      "action": "DISASSEMBLE",
+      "startTransform": {
+        "position": [
+          0,
+          -0.4,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "endTransform": {
+        "position": [
+          0,
+          -1.2,
+          0
+        ],
+        "rotation": [
+          0.7071,
+          0,
+          0,
+          0.7071
+        ]
+      },
+      "tolerance": 0.05,
+      "hint": "Remove main bearing caps and lower crankshaft assembly downwards.",
+      "safetyWarning": "Heavy component. Support counterweights evenly."
+    }
+  ]
+}

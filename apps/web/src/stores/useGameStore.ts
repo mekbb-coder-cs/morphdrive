@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type GameView = "GARAGE" | "DRIVING" | "LEADERBOARDS";
+export type GameView = "GARAGE" | "DRIVING" | "LEADERBOARDS" | "INSPECT";
 
 interface GameState {
   currentView: GameView;
@@ -18,7 +18,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
-  currentView: "GARAGE",
+  currentView: "INSPECT",
   currentSpeedKmh: 0,
   currentRpm: 1000,
   lapTimeMs: 0,
