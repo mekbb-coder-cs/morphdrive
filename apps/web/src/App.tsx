@@ -2,6 +2,7 @@ import React from "react";
 import { GarageCanvas } from "./components/3d/GarageCanvas";
 import { GarageUI } from "./components/garage/GarageUI";
 import { MachineInspectionPage } from "./components/inspector/MachineInspectionPage";
+import { DisassemblyPage } from "./components/disassembly/DisassemblyPage";
 import { useGameStore } from "./stores/useGameStore";
 import { ArrowLeft } from "lucide-react";
 
@@ -10,6 +11,10 @@ export const App: React.FC = () => {
 
   if (currentView === "INSPECT") {
     return <MachineInspectionPage />;
+  }
+
+  if (currentView === "DISASSEMBLE") {
+    return <DisassemblyPage />;
   }
 
   return (

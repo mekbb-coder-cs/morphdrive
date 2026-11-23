@@ -10,6 +10,7 @@ import {
   Car,
   ChevronDown,
   Sparkles,
+  Wrench,
 } from "lucide-react";
 
 interface Props {
@@ -86,6 +87,16 @@ export const MachineSelectorHeader: React.FC<Props> = ({ metadata }) => {
 
       {/* Right Navigation Controls */}
       <div className="flex items-center gap-2.5">
+        {/* Switch to Disassembly Lab */}
+        <button
+          onClick={() => setView("DISASSEMBLE")}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/30 transition-all shadow-sm"
+          title="Switch to Interactive Disassembly Mode"
+        >
+          <Wrench size={14} />
+          <span className="hidden sm:inline">Disassembly Lab</span>
+        </button>
+
         {/* Switch to Vehicle Garage Mode */}
         <button
           onClick={() => setView("GARAGE")}
