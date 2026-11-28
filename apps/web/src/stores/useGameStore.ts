@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type GameView = "GARAGE" | "DRIVING" | "LEADERBOARDS" | "INSPECT" | "DISASSEMBLE";
+export type GameView = "GARAGE" | "DRIVING" | "LEADERBOARDS" | "INSPECT" | "DISASSEMBLE" | "REASSEMBLE" | "LEARN" | "DASHBOARD";
 
 interface GameState {
   currentView: GameView;
