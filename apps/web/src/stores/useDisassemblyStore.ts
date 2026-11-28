@@ -143,7 +143,19 @@ export const useDisassemblyStore = create<DisassemblyState>((set, get) => ({
     });
 
     if (nextCandidate) {
-      return get().attemptDisassemblePart(nextCandidate);
+      // Brief hint flash before auto-disassemble so GSAP animation in renderer fires
+      const rule = dag.rules[nextCandidate];
+      set({
+        hintMesh: nextCandidate,
+        selectedPartMesh: nextCandidate,
+        activeTransformMesh: nextCandidate,
+        hintMessage: `AUTO-STEP: ${rule?.displayName ?? nextCandidate}. ${rule?.hint ?? ""}`,
+      });
+      // Delay the commit so the hint highlight is visible for 300ms
+      setTimeout(() => {
+        get().attemptDisassemblePart(nextCandidate);
+      }, 300);
+      return true;
     }
     return false;
   },
